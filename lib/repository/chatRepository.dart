@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DataApi {
-  DataApi({required SharedPreferences plugin,}) : _plugin = plugin {
+class ChatRepository {
+  ChatRepository({required SharedPreferences plugin,}) : _plugin = plugin {
     _init();
   }
 
