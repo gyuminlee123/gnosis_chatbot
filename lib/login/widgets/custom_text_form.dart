@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gnosis_chatbot/login/bloc/login_bloc.dart';
 
 enum inputStatus { email, pass, name }
 
@@ -7,7 +8,8 @@ class CustomTextFormField extends StatelessWidget {
       {Key? key,
       required this.text,
       required this.type,
-      required this.controller})
+      required this.controller,
+      })
       : super(key: key);
   final String text;
   final inputStatus type;
