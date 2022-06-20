@@ -10,17 +10,21 @@ class ChatRepository {
   final String keyEmail = '_email_';
   String _username = '';
   String _email = '';
+  String _botname = '';
 
   //직전에 사용된 username, email 값을 얻어온다.
   void _init() {
     _username = _plugin.getString(keyName) ?? '';
     _email = _plugin.getString(keyEmail) ?? '';
+    _botname = 'PROTOTYPE';
   }
 
   //현재 username, email 값을 기록한다.
   Future<void> saveLogInfo(username, email) async {
     await _plugin.setString(keyName, username);
     await _plugin.setString(keyEmail, email);
+    _username = username;
+    _email = email;
   }
   //직전 사용한 username을 읽어온다.
   String loadUsername() {
@@ -30,6 +34,11 @@ class ChatRepository {
   //직전 사용한 email 을 읽어온다.
   String loadEmail() {
     return _email;
+  }
+
+  //선택된 bot의 name을 읽어온다.
+  String loadBotname() {
+    return _botname;
   }
 
 }

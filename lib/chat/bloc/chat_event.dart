@@ -11,7 +11,8 @@ class ChatInit extends ChatEvent {
   const ChatInit();
 }
 
-class ChatOnChat extends ChatEvent {
-  const ChatOnChat();
+class ChatSendMsg extends ChatEvent {
+  const ChatSendMsg();
 }
+
 

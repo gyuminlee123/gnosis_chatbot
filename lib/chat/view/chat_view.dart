@@ -13,8 +13,9 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ChatBloc(chatRepository: context.read<ChatRepository>()),
-      child: ChatView(),
+          ChatBloc(chatRepository: context.read<ChatRepository>())
+            ..add(const ChatInit()),
+      child: const ChatView(),
     );
   }
 }
