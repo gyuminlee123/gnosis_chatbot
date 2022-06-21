@@ -12,7 +12,8 @@ class ChatInit extends ChatEvent {
 }
 
 class ChatSendMsg extends ChatEvent {
-  const ChatSendMsg();
+  const ChatSendMsg({required this.message});
+  final String message;
 }
 
 

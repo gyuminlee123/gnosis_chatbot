@@ -32,8 +32,14 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('PROTO TYPE CHATTER BOT')),
-      body:
-        BlocBuilder<ChatBloc, ChatState>(
+      body: BlocListener<ChatBloc, ChatState> (
+        listenWhen: (previous, current) => previous.status != current.status,
+        listener: (context, state) {
+          if(state.status == ChatStatus.ready) {
+            setState((){});
+          }
+        },
+        child: BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
             return Column(
                 children: [
@@ -50,16 +56,23 @@ class _ChatViewState extends State<ChatView> {
                     ),
                   ),
                   NewMessage(
+                      isReady : (state.status == ChatStatus.ready),
                       onSend: (message) {
                         //message send button 눌렸을때 일처리를 여기서 한다.
                         var newMessage = Message(isUser: true, name: state.username, time: DateTime.now(), message: message);
                         state.messageList.insert(0,newMessage);
-                        setState((){});
+                        setState((){
+                          print("setState1");
+                        });
+                        context.read<ChatBloc>().add(
+                          ChatSendMsg(message: message)
+                        );
                       }),
                 ]
             );
           }
         ),
+      ),
     );
   }
 }

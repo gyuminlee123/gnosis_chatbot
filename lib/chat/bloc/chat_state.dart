@@ -7,6 +7,7 @@ part of 'chat_bloc.dart';
 //fetching : 사용자가 입력한 message에 대한 bot의 대답을 가져오는 상태
 //assess : bot의 대답에 대한 평가를 사용자가 입력하는 상태
 
+
 enum ChatStatus { init, ready, fetching, assess }
 
 class ChatState extends Equatable {
@@ -17,13 +18,6 @@ class ChatState extends Equatable {
     this.botname = 'PROTO_TYPE',
     this.messageList = const <Message> [],
   }) {
-    Message a = Message(isUser:true, name:'kekule', email: 'kekule@naver.com', time: DateTime.now(), message: '1');
-    Message b = Message(isUser:false, name:'AI BOT', email: '', time: DateTime.now(), message: '2');
-    Message c = Message(isUser:true, name:'kekule', email: 'kekule@naver.com', time: DateTime.now(), message: '3.');
-    Message d = Message(isUser:false, name:'AI BOT', email: '', time: DateTime.now(), message: '4');
-    Message e = Message(isUser:true, name:'kekule', email: 'kekule@naver.com', time: DateTime.now(), message: '5');
-    Message f = Message(isUser:false, name:'AI BOT', email: '', time: DateTime.now(), message: '6');
-    messageList = [a,b,c,d,e,f];
   }
 
   final ChatStatus status;

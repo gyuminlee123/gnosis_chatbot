@@ -1,4 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ChatRepository {
   ChatRepository({required SharedPreferences plugin,}) : _plugin = plugin {
@@ -41,4 +44,29 @@ class ChatRepository {
     return _botname;
   }
 
+  //Server로 메세지를 보내고 응답을 받아온다.
+  Future<String> sendMsgToServer(username, email, message) async {
+    String answer = '';
+    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk/jieun');
+    var response = await http.post(
+      url,
+      headers: <String,String> {
+        'Content-Type' : 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String,String> {
+        "user_id": "kekule",
+        "user_name": "규민",
+        "text": message
+      }),
+    );
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      answer = json['response'];
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      answer = 'Cannot get answer from AI.';
+    }
+
+    return answer;
+  }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({Key? key, required this.onSend}) : super(key: key);
+  NewMessage({Key? key, required this.isReady, required this.onSend}) : super(key: key);
 
   final void Function(String) onSend;
+  bool isReady = true;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -49,7 +50,8 @@ class _NewMessageState extends State<NewMessage> {
             ),
             IconButton(
               onPressed: () {
-                if(_userEnterMessage.trim().isEmpty) {
+                //message 가 없거나, State가 Ready 상태가 아니면 눌러도 반응X
+                if(_userEnterMessage.trim().isEmpty || !widget.isReady) {
 
                 } else
                   {
@@ -58,7 +60,9 @@ class _NewMessageState extends State<NewMessage> {
                     widget.onSend(sendMessage);
                   }
               },
-              icon: const Icon(Icons.send), color: _userEnterMessage.trim().isEmpty ? Colors.grey : Colors.blueAccent,),
+              icon: const Icon(Icons.send),
+              color: (_userEnterMessage.trim().isEmpty || !widget.isReady) ? Colors.grey : Colors.blueAccent,
+            ),
           ],
         )
     );
