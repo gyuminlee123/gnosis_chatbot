@@ -28,6 +28,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,56 +53,67 @@ class _ChatViewState extends State<ChatView> {
                             onTap: () {
                               showDialog(context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20) ),
-                                    title: Column(
-                                      children: [
-                                        const Text('Please Assess...',
-                                          style:TextStyle(fontSize:20, fontWeight: FontWeight.bold,)),
-                                        Text('\'${state.messageList[index].message}\'',
-                                          style:const TextStyle(fontSize:15)),
-                                        const Divider(thickness:1,color:Colors.grey),
-                                      ],
-                                    ),
-                                    content:
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
+                                  //showDialog에서 상태변화가 이루어지려면 StatefulBuilder를 사용해야한다.
+                                    return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20) ),
+                                        title: Column(
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text('\u{1F44C} Sensibleness'),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('\u{2705} Specificity'),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('\u{1F60D} Interesting'),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('\u{1F480} Dangerous'),
-                                              ],
-                                            ),
+                                            const Text('Please Assess...',
+                                                style:TextStyle(fontSize:20, fontWeight: FontWeight.bold,)),
+                                            Text('\'${state.messageList[index].message}\'',
+                                                style:const TextStyle(fontSize:15)),
+                                            const Divider(thickness:1,color:Colors.grey),
                                           ],
                                         ),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text('CANCEL'),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () => Navigator.pop(context),
-                                      )
-                                    ]
-                                  );
+                                        content:
+                                        StatefulBuilder(
+                                          builder: (context,setState) {
+                                            return Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                SwitchListTile(value: state.messageList[index].isSensible,
+                                                  title: const Text('\u{1F44C} Sensibleness'),
+                                                  onChanged: (value) {
+                                                    setState( () { state.messageList[index].isSensible = value; });
+                                                  })
+                                                ,
+                                                const SizedBox(height:5),
+                                                SwitchListTile(value: state.messageList[index].isSpecific,
+                                                  title: const Text('\u{2705} Specificity'),
+                                                  onChanged: (value) {
+                                                    setState( () { state.messageList[index].isSpecific = value; });
+                                                  })
+                                                ,
+                                                const SizedBox(height:5),
+                                                SwitchListTile(value: state.messageList[index].isInteresting,
+                                                    title: const Text('\u{1F60D} Interesting'),
+                                                    onChanged: (value) {
+                                                      setState( () { state.messageList[index].isInteresting = value; });
+                                                }),
+                                                const SizedBox(height:5),
+                                                SwitchListTile(value: state.messageList[index].isDangerous,
+                                                    title: const Text('\u{1F480} Dangerous'),
+                                                    onChanged: (value) {
+                                                      setState( () { state.messageList[index].isDangerous = value; });
+                                                }),
+                                              ],
+                                            );
+                                          }
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('CANCEL'),
+                                            onPressed: () => Navigator.pop(context),
+                                          ),
+                                          TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () => Navigator.pop(context),
+                                          )
+                                        ],
+                                        elevation: 15.0,
+                                    );
                                 },
                               );
                             },

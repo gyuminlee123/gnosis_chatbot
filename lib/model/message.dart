@@ -19,7 +19,13 @@ class Message {
   final String name;
   final DateTime time;
   final String message;
+  //Server에서 생성해주는 UID AI가 생성한 말만 가지고 있다.
+  final String messageID = '';
   String? email = '';
+  bool isSensible = false;
+  bool isSpecific = false;
+  bool isInteresting = false;
+  bool isDangerous = false;
 
   /// map에서 새로운 User 인스턴스를 생성하기 위해 필요한 팩토리 생성자입니다.
   /// 생성된 `_$UserFromJson()` 생성자에게 map을 전달해줍니다.
