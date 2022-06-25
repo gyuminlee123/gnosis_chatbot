@@ -13,6 +13,7 @@ class Message {
     this.email,
     required this.time,
     required this.message,
+    this.messageID,
   });
 
   final bool isUser;
@@ -20,7 +21,7 @@ class Message {
   final DateTime time;
   final String message;
   //Server에서 생성해주는 UID AI가 생성한 말만 가지고 있다.
-  final String messageID = '';
+  String? messageID = '';
   String? email = '';
   bool isSensible = false;
   bool isSpecific = false;
@@ -37,3 +38,4 @@ class Message {
   Map<String, dynamic> toJson() => _$MessageToJson(this);
 
 }
+

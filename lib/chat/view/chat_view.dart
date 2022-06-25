@@ -5,6 +5,7 @@ import 'package:gnosis_chatbot/chat/bloc/chat_bloc.dart';
 import 'package:gnosis_chatbot/chat/view/new_message.dart';
 import 'package:gnosis_chatbot/chat/widget/chat_bubble.dart';
 import 'package:gnosis_chatbot/model/message.dart';
+import 'package:gnosis_chatbot/constants.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -29,13 +30,51 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
 
+  //채팅창을 지워준다. AlertDialog안에서는 context를 읽지 못해 실행이 안된다.
+  void _deleteChatRoom() {
+    context.read<ChatBloc>().add(ChatDeleteAll());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('PROTO TYPE CHATTER BOT')),
+      appBar: AppBar(
+        title: const Text('PROTO TYPE CHATTER BOT'),
+        actions: [
+          //대화 목록 초기화여부를 AlertDialog를 띄워서 물어본다.
+          IconButton(
+            onPressed: (){
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20) ),
+                    title: const Text('현재 대화를 삭제할까요?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('CANCEL'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          _deleteChatRoom();
+                          Navigator.pop(context);
+                        }
+                      )
+                  ],
+                  );
+                }
+              );
+            },
+            icon: const Icon(Icons.delete))
+        ]
+      ),
       body: BlocListener<ChatBloc, ChatState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
+          //다른 상태에서 ready 상태로 돌아올때 setState를 호출해준다.
           if (state.status == ChatStatus.ready) {
             setState(() {});
           }
@@ -74,27 +113,27 @@ class _ChatViewState extends State<ChatView> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 SwitchListTile(value: state.messageList[index].isSensible,
-                                                  title: const Text('\u{1F44C} Sensibleness'),
+                                                  title: const Text('$kSensible Sensibleness'),
                                                   onChanged: (value) {
                                                     setState( () { state.messageList[index].isSensible = value; });
                                                   })
                                                 ,
                                                 const SizedBox(height:5),
                                                 SwitchListTile(value: state.messageList[index].isSpecific,
-                                                  title: const Text('\u{2705} Specificity'),
+                                                  title: const Text('$kSpecific Specificity'),
                                                   onChanged: (value) {
                                                     setState( () { state.messageList[index].isSpecific = value; });
                                                   })
                                                 ,
                                                 const SizedBox(height:5),
                                                 SwitchListTile(value: state.messageList[index].isInteresting,
-                                                    title: const Text('\u{1F60D} Interesting'),
+                                                    title: const Text('$kInteresting Interesting'),
                                                     onChanged: (value) {
                                                       setState( () { state.messageList[index].isInteresting = value; });
                                                 }),
                                                 const SizedBox(height:5),
                                                 SwitchListTile(value: state.messageList[index].isDangerous,
-                                                    title: const Text('\u{1F480} Dangerous'),
+                                                    title: const Text('$kDangerous Dangerous'),
                                                     onChanged: (value) {
                                                       setState( () { state.messageList[index].isDangerous = value; });
                                                 }),
@@ -126,6 +165,7 @@ class _ChatViewState extends State<ChatView> {
                       ),
                     ),
                     NewMessage(
+                        //status가 ready 상태가 아니면 입력을 받을 수 없다.
                         isReady: (state.status == ChatStatus.ready),
                         onSend: (message) {
                           //message send button 눌렸을때 일처리를 여기서 한다.
@@ -135,7 +175,6 @@ class _ChatViewState extends State<ChatView> {
                               message: message);
                           state.messageList.insert(0, newMessage);
                           setState(() {
-                            print("setState1");
                           });
                           context.read<ChatBloc>().add(
                               ChatSendMsg(message: message)

@@ -8,7 +8,7 @@ part of 'chat_bloc.dart';
 //assess : bot의 대답에 대한 평가를 사용자가 입력하는 상태
 
 
-enum ChatStatus { init, ready, fetching, assess }
+enum ChatStatus { init, ready, deleteall, fetching, assess }
 
 class ChatState extends Equatable {
   ChatState({
@@ -17,8 +17,7 @@ class ChatState extends Equatable {
     this.email = '',
     this.botname = 'PROTO_TYPE',
     this.messageList = const <Message> [],
-  }) {
-  }
+  }) {}
 
   final ChatStatus status;
   final String username;
