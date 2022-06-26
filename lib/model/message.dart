@@ -10,19 +10,18 @@ class Message {
   Message({
     required this.isUser,
     required this.name,
-    this.email,
-    required this.time,
+    required this.email,
     required this.message,
     this.messageID,
   });
 
   final bool isUser;
   final String name;
-  final DateTime time;
   final String message;
+  final String email;
   //Server에서 생성해주는 UID AI가 생성한 말만 가지고 있다.
   String? messageID = '';
-  String? email = '';
+
   bool isSensible = false;
   bool isSpecific = false;
   bool isInteresting = false;

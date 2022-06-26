@@ -21,14 +21,33 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepository;
 
   //상태를 초기화 한다.
-  void _onChatInit(ChatInit event, Emitter<ChatState> emit) {
+  Future<void> _onChatInit(ChatInit event, Emitter<ChatState> emit) async{
     List<Message> newMsgList = [];
+    emit(state.copyWith(
+      status: ChatStatus.init,
+      username: _chatRepository.loadUsername(),
+      email: _chatRepository.loadEmail(),
+      botname: event.botname,
+      messageList: newMsgList,
+    ));
+
+    var answer = await _chatRepository.getPrevMsg(_chatRepository.loadEmail(), state.botname);
+    List dialogList = answer['dialogs'];
+
+    if(dialogList.isNotEmpty) {
+      for (var dialog in dialogList) {
+            var newMsg1 = Message(isUser:true, name: state.username, email: state.email, message: dialog['user_input']);
+            newMsgList.insert(0,newMsg1);
+            var newMsg2 = Message(isUser:false, name: state.botname, email: '', message: dialog['response'], messageID: dialog['dialog_id']);
+            newMsgList.insert(0,newMsg2);
+      }
+    }
 
     emit(state.copyWith(
       status: ChatStatus.ready,
       username: _chatRepository.loadUsername(),
       email: _chatRepository.loadEmail(),
-      botname: _chatRepository.loadBotname(),
+      botname: event.botname,
       messageList: newMsgList,
     ));
   }
@@ -38,11 +57,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(
       status: ChatStatus.fetching,
     ));
-    var answer = await _chatRepository.sendMsgToServer(state.username, state.email, event.message);
+    var answer = await _chatRepository.sendMsgToServer(state.username, state.email, state.botname, event.message);
     var newMessage = Message(
         isUser: false,
         name: state.botname,
-        time: DateTime.now(),
+        email: '',
         message: answer['response'],
         messageID: answer['dialog_id']);
     state.messageList.insert(0,newMessage);

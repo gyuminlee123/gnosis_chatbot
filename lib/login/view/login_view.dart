@@ -85,7 +85,7 @@ class _LoginViewState extends State<LoginView> {
                     username: userNameController!.text,
                     email: emailController!.text));
 
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(botname: 'jieun')));
               } else {
                 print("Wrong values");
               }

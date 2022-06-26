@@ -13,13 +13,13 @@ class ChatRepository {
   final String keyEmail = '_email_';
   String _username = '';
   String _email = '';
-  String _botname = '';
+  //String _botname = '';
 
   //직전에 사용된 username, email 값을 얻어온다.
   void _init() {
     _username = _plugin.getString(keyName) ?? '';
     _email = _plugin.getString(keyEmail) ?? '';
-    _botname = 'jieun';
+    //_botname = 'jieun';
   }
 
   //현재 username, email 값을 기록한다.
@@ -40,9 +40,9 @@ class ChatRepository {
   }
 
   //선택된 bot의 name을 읽어온다.
-  String loadBotname() {
-    return _botname;
-  }
+  //String loadBotname() {
+  //  return _botname;
+  //}
 
   //Server로 대화삭제를 요청한다.
   //Call Example
@@ -74,9 +74,9 @@ class ChatRepository {
   }
 
   //Server로 메세지를 보내고 응답을 받아온다.
-  Future<dynamic> sendMsgToServer(username, email, message) async {
+  Future<dynamic> sendMsgToServer(username, email, botname, message) async {
     var json_result;
-    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk/jieun');
+    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk/$botname');
     //Server로 보낼 내용 구성
     var response = await http.post(
       url,
@@ -113,4 +113,20 @@ class ChatRepository {
   //포함되어 있을 경우, timestamp 와 dialog_id 는 빼고 대화 스크립트만 문자열로 리턴
   //Call Example
   //GET /talk-query/jieun?user_id=lee_jaehoon
+  Future<dynamic> getPrevMsg(email, botname) async {
+    var json_result;
+    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk-query/$botname?user_id=$email');
+    //Server로 보낼 내용 구성
+    var response = await http.get(url);
+    //서버에서 response를 받으면 decode 해서 결과를 저장한다.
+    if (response.statusCode == 200) {
+      json_result = jsonDecode(response.body);
+      print(json_result);
+    } else {
+      print(url);
+      print('Request failed with status: ${response.statusCode}.');
+      json_result = jsonDecode(response.body);
+    }
+    return json_result;
+  }
 }

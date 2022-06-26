@@ -8,14 +8,17 @@ import 'package:gnosis_chatbot/model/message.dart';
 import 'package:gnosis_chatbot/constants.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  const ChatPage({Key? key, required this.botname}) : super(key: key);
+
+  //character 이름을 character 선택화면에서 넘겨 받는다.
+  final String botname;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
       ChatBloc(chatRepository: context.read<ChatRepository>())
-        ..add(const ChatInit()),
+        ..add(ChatInit(botname: botname)),
       child: const ChatView(),
     );
   }
@@ -39,7 +42,7 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PROTO TYPE CHATTER BOT'),
+        title: const Text('CHAT WITH AI BOT'),
         actions: [
           //대화 목록 초기화여부를 AlertDialog를 띄워서 물어본다.
           IconButton(
@@ -171,7 +174,7 @@ class _ChatViewState extends State<ChatView> {
                           //message send button 눌렸을때 일처리를 여기서 한다.
                           var newMessage = Message(isUser: true,
                               name: state.username,
-                              time: DateTime.now(),
+                              email: state.email,
                               message: message);
                           state.messageList.insert(0, newMessage);
                           setState(() {

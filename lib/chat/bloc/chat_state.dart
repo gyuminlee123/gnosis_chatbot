@@ -15,7 +15,7 @@ class ChatState extends Equatable {
     this.status = ChatStatus.init,
     this.username = '',
     this.email = '',
-    this.botname = 'PROTO_TYPE',
+    this.botname = '',
     this.messageList = const <Message> [],
   }) {}
 
