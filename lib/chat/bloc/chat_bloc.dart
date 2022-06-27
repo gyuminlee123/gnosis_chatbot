@@ -16,6 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatInit>(_onChatInit);
     on<ChatSendMsg>(_onChatSendMsg);
     on<ChatDeleteAll>(_onChatDeleteAll);
+    on<ChatSendAssess>(_onChatSendAssess);
   }
 
   final ChatRepository _chatRepository;
@@ -31,6 +32,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       messageList: newMsgList,
     ));
 
+    //이전 대화목록을 불러온다.
     var answer = await _chatRepository.getPrevMsg(_chatRepository.loadEmail(), state.botname);
     List dialogList = answer['dialogs'];
 
@@ -68,6 +70,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(
       status: ChatStatus.ready,
       messageList: state.messageList
+    ));
+  }
+
+  //Server로 평가내용을 보낸다.
+  Future<void> _onChatSendAssess(ChatSendAssess event, Emitter<ChatState> emit) async {
+    emit(state.copyWith(
+      status: ChatStatus.assess,
+    ));
+    var answer = await _chatRepository.sendAssess(
+        state.messageList[event.index].messageID,
+        state.email, //AI의 Message정보에는 email(사용자ID) 가 ''로 되어있으므로 현재 state에서 유지하는 email값을 준다.
+        state.messageList[event.index].isSensible,
+        state.messageList[event.index].isSpecific,
+        state.messageList[event.index].isInteresting,
+        state.messageList[event.index].isDangerous
+    );
+    emit(state.copyWith(
+      status: ChatStatus.ready,
     ));
   }
 

@@ -129,4 +129,40 @@ class ChatRepository {
     }
     return json_result;
   }
+
+  Future<void> sendAssess(dialog_id, assessor_id, isSensible, isSpecific, isInteresting, isDangerous) async {
+    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk-feedback');
+    //Server로 보낼 내용 구성
+    var response = await http.post(
+      url,
+      headers: <String,String> {
+        'Content-Type' : 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String,String> {
+      "dialog_id": dialog_id,
+      "assessor_id": assessor_id,
+      "sensible": isSensible ? '1' : '0',
+      "specific": isSpecific ? '1' : '0',
+      "interesting": isInteresting ? '1' : '0',
+      "dangerous": isDangerous ? '1' : '0'
+      }),
+    );
+
+    print( jsonEncode(<String,String> {
+      "dialog_id": dialog_id,
+      "assessor_id": assessor_id,
+      "sensible": isSensible ? '1' : '0',
+      "specific": isSpecific ? '1' : '0',
+      "interesting": isInteresting ? '1' : '0',
+      "dangerous": isDangerous ? '1' : '0'
+    }) );
+
+    //서버에서 response를 받으면 decode 해서 결과를 저장한다.
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
 }

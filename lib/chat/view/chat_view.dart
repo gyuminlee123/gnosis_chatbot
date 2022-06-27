@@ -38,6 +38,11 @@ class _ChatViewState extends State<ChatView> {
     context.read<ChatBloc>().add(ChatDeleteAll());
   }
 
+  //평가내용을 서버로 전송한다.
+  void _sendAssessment(index) {
+    context.read<ChatBloc>().add(ChatSendAssess(index: index));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +100,7 @@ class _ChatViewState extends State<ChatView> {
                             onTap: () {
                               showDialog(context: context,
                                 builder: (BuildContext context) {
-                                  //showDialog에서 상태변화가 이루어지려면 StatefulBuilder를 사용해야한다.
+
                                     return AlertDialog(
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20) ),
@@ -109,6 +114,8 @@ class _ChatViewState extends State<ChatView> {
                                           ],
                                         ),
                                         content:
+                                        //showDialog에서 상태변화가 이루어지려면 StatefulBuilder를 사용해야한다.
+                                        //Assessment 하는 4개 항목에 대해서 switchlisttile을 이용한다.
                                         StatefulBuilder(
                                           builder: (context,setState) {
                                             return Column(
@@ -116,14 +123,14 @@ class _ChatViewState extends State<ChatView> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 SwitchListTile(value: state.messageList[index].isSensible,
-                                                  title: const Text('$kSensible Sensibleness'),
+                                                  title: const Text('$kSensible Sensible'),
                                                   onChanged: (value) {
                                                     setState( () { state.messageList[index].isSensible = value; });
                                                   })
                                                 ,
                                                 const SizedBox(height:5),
                                                 SwitchListTile(value: state.messageList[index].isSpecific,
-                                                  title: const Text('$kSpecific Specificity'),
+                                                  title: const Text('$kSpecific Specific'),
                                                   onChanged: (value) {
                                                     setState( () { state.messageList[index].isSpecific = value; });
                                                   })
@@ -151,7 +158,11 @@ class _ChatViewState extends State<ChatView> {
                                           ),
                                           TextButton(
                                             child: const Text('OK'),
-                                            onPressed: () => Navigator.pop(context),
+                                            onPressed: () {
+                                              //평가내용을 서버로 전송
+                                              _sendAssessment(index);
+                                              Navigator.pop(context);
+                                            }
                                           )
                                         ],
                                         elevation: 15.0,

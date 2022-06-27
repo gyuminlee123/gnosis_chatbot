@@ -24,4 +24,10 @@ class ChatDeleteAll extends ChatEvent {
   const ChatDeleteAll();
 }
 
+//선택된 index의 평가를 전송한다. 전부 false면 전송할 필요 없다.
+class ChatSendAssess extends ChatEvent {
+  const ChatSendAssess({required this.index});
+  final int index;
+}
+
 
