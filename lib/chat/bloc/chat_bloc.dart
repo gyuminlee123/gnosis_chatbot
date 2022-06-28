@@ -33,7 +33,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ));
 
     //이전 대화목록을 불러온다.
-    var answer = await _chatRepository.getPrevMsg(_chatRepository.loadEmail(), state.botname);
+    //Server에서 불러오는 코드
+    /* var answer = await _chatRepository.getPrevMsgFromServer(_chatRepository.loadEmail(), state.botname);
     List dialogList = answer['dialogs'];
 
     if(dialogList.isNotEmpty) {
@@ -42,6 +43,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             newMsgList.insert(0,newMsg1);
             var newMsg2 = Message(isUser:false, name: state.botname, email: '', message: dialog['response'], messageID: dialog['dialog_id']);
             newMsgList.insert(0,newMsg2);
+      }
+    }*/
+
+    //Local 에서 이전 대화목록을 불러온다.
+    String msgListString = await _chatRepository.getPrevMsgFromLocal(state.botname, state.email);
+
+    if(msgListString.isNotEmpty) {
+      var jsonResult = jsonDecode(msgListString);
+      for( var newMessage in jsonResult ) {
+        Message msg = Message.fromJson(newMessage);
+        newMsgList.add(msg);
       }
     }
 
@@ -67,6 +79,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         message: answer['response'],
         messageID: answer['dialog_id']);
     state.messageList.insert(0,newMessage);
+    //주고받은 메세지를 로컬에도 저장해야한다.
+    var msgListString = jsonEncode(state.messageList).toString();
+    _chatRepository.saveMsgListToLocal(state.botname, state.email, msgListString);
+
+    //print('msgListString : ${msgListString}');
+
     emit(state.copyWith(
       status: ChatStatus.ready,
       messageList: state.messageList
@@ -86,6 +104,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         state.messageList[event.index].isInteresting,
         state.messageList[event.index].isDangerous
     );
+    //평가한 것을 로컬에도 저장해야한다.
+    var msgListString = jsonEncode(state.messageList).toString();
+    _chatRepository.saveMsgListToLocal(state.botname, state.email, msgListString);
+
     emit(state.copyWith(
       status: ChatStatus.ready,
     ));
@@ -100,6 +122,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     bool isSuccess = await _chatRepository.requestDelete(state.email, state.botname);
     if( isSuccess ) {
       state.messageList.clear();
+      //로컬저장소에서도 지운다.
+      _chatRepository.deleteMsgListInLocal(state.botname, state.email);
     }
     else {
       print('Fail to delete messages on server.');

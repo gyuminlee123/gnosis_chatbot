@@ -173,7 +173,11 @@ class _ChatViewState extends State<ChatView> {
                             child: ChatBubbles(
                                 state.messageList[index].message,
                                 state.messageList[index].isUser,
-                                state.messageList[index].name),
+                                state.messageList[index].name,
+                                state.messageList[index].isSensible,
+                                state.messageList[index].isSpecific,
+                                state.messageList[index].isInteresting,
+                                state.messageList[index].isDangerous,),
                           );
                         },
                       ),

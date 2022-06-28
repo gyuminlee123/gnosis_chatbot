@@ -73,6 +73,29 @@ class ChatRepository {
     return isDelete;
   }
 
+  //SharedPreferences 에 message 목록을 저장한다.
+  //이때 Key 는 charactername_사용자email
+  Future<void> saveMsgListToLocal(String botname, String email, String msgListString) async {
+    var keyString = '${botname}_${email}';
+    await _plugin.setString(keyString, msgListString);
+  }
+
+  //SharedPrefrences 로 로컬에 저장된 message 목록을 불러온다.
+  Future<String> getPrevMsgFromLocal(String botname, String email) async {
+    var msgListString = '';
+    var keyString = '${botname}_${email}';
+    msgListString = _plugin.getString(keyString) ?? '';
+
+    return msgListString;
+  }
+
+  //로컬에 저장된 message 들을 삭제한다.
+  Future<void> deleteMsgListInLocal(String botname, String email) async {
+    var keyString = '${botname}_${email}';
+    await _plugin.remove(keyString);
+  }
+
+
   //Server로 메세지를 보내고 응답을 받아온다.
   Future<dynamic> sendMsgToServer(username, email, botname, message) async {
     var json_result;
@@ -113,7 +136,7 @@ class ChatRepository {
   //포함되어 있을 경우, timestamp 와 dialog_id 는 빼고 대화 스크립트만 문자열로 리턴
   //Call Example
   //GET /talk-query/jieun?user_id=lee_jaehoon
-  Future<dynamic> getPrevMsg(email, botname) async {
+  Future<dynamic> getPrevMsgFromServer(email, botname) async {
     var json_result;
     var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk-query/$botname?user_id=$email');
     //Server로 보낼 내용 구성
@@ -130,6 +153,7 @@ class ChatRepository {
     return json_result;
   }
 
+  //Server로 평가내용을 전송한다.
   Future<void> sendAssess(dialog_id, assessor_id, isSensible, isSpecific, isInteresting, isDangerous) async {
     var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/talk-feedback');
     //Server로 보낼 내용 구성
