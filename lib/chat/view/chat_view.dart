@@ -192,8 +192,7 @@ class _ChatViewState extends State<ChatView> {
                               email: state.email,
                               message: message);
                           state.messageList.insert(0, newMessage);
-                          setState(() {
-                          });
+                          setState(() {});
                           context.read<ChatBloc>().add(
                               ChatSendMsg(message: message)
                           );

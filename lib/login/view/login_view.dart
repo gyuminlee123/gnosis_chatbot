@@ -5,6 +5,7 @@ import 'package:gnosis_chatbot/login/bloc/login_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnosis_chatbot/login/widgets/custom_text_form.dart';
 import 'package:gnosis_chatbot/chat/view/chat_view.dart';
+import 'package:gnosis_chatbot/selectbot/view/select_view.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -85,7 +86,8 @@ class _LoginViewState extends State<LoginView> {
                     username: userNameController!.text,
                     email: emailController!.text));
 
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(botname: 'jieun')));
+                //Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(botname: 'jieun')));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectPage()));
               } else {
                 print("Wrong values");
               }
