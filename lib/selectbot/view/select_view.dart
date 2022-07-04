@@ -12,8 +12,7 @@ class SelectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      SelectBloc(chatRepository: context.read<ChatRepository>())
-        ..add(SelectInit()),
+      SelectBloc(chatRepository: context.read<ChatRepository>()),
       child: const SelectView(),
     );
   }
@@ -28,13 +27,18 @@ class SelectView extends StatefulWidget {
 
 class _SelectViewState extends State<SelectView> {
   @override
+  void initState() {
+    super.initState();
+    context.read<SelectBloc>().add(SelectInit());
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Choose Character')),
       body: TextButton(
         child:Text('press'),
         onPressed: (){
-
+          context.read<SelectBloc>().add(SelectBeginChat());
           Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(botname: 'jieun')));
         },
       ),

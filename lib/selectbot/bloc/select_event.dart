@@ -11,3 +11,8 @@ abstract class SelectEvent extends Equatable {
 class SelectInit extends SelectEvent {
   const SelectInit();
 }
+
+//
+class SelectBeginChat extends SelectEvent {
+  const SelectBeginChat();
+}

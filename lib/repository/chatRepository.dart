@@ -124,6 +124,26 @@ class ChatRepository {
     return json_result;
   }
 
+  //Server로 부터 AI 케릭터 목록을 불러온다.
+  //API Specification
+  //GET /character-list
+  //Call Example
+  //GET /character-list
+  Future<dynamic> getCharList() async {
+    var json_result;
+    var url = Uri.parse('https://gnosis-api-dev.cocone-m.kr/character-list');
+    var response = await http.get(url);
+
+    if(response.statusCode == 200) {
+      json_result = jsonDecode(response.body);
+    } else {
+      print(url);
+      print('Request failed with status: ${response.statusCode}.');
+      json_result = jsonDecode(response.body);
+    }
+    return json_result;
+  }
+
   //Server로부터 대화내용을 불러온다.
   //API Specification
   //GET /talk-query/<character_id>?user_id=<user_id>&plain
