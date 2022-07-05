@@ -9,11 +9,13 @@ class Character {
   const Character({
     required this.character_id,
     required this.name,
-    required this.description,});
+    required this.description,
+    required this.imageurl});
 
   final String character_id;
   final String name;
   final String description;
+  final String imageurl;
 
   /// map에서 새로운 User 인스턴스를 생성하기 위해 필요한 팩토리 생성자입니다.
   /// 생성된 `_$UserFromJson()` 생성자에게 map을 전달해줍니다.

@@ -9,8 +9,7 @@ abstract class ChatEvent extends Equatable {
 
 //초기화
 class ChatInit extends ChatEvent {
-  const ChatInit({required this.botname});
-  final String botname;
+  const ChatInit();
 }
 
 //서버에 message를 전송한다.

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnosis_chatbot/repository/chatRepository.dart';
 import 'package:gnosis_chatbot/selectbot/bloc/select_bloc.dart';
 import 'package:gnosis_chatbot/chat/view/chat_view.dart';
+import 'package:extended_image/extended_image.dart';
 
 
 class SelectPage extends StatelessWidget {
@@ -35,13 +36,45 @@ class _SelectViewState extends State<SelectView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Choose Character')),
-      body: TextButton(
+      body: BlocBuilder<SelectBloc, SelectState> (
+        builder: (context, state) {
+          return ListView.builder(
+            itemCount: state.charList.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  SizedBox(height:15),
+                  InkWell(
+                    onTap: () {
+                      context.read<SelectBloc>().add(SelectBeginChat());
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context)=>ChatPage(character: state.charList[index])));
+                    },
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: ExtendedNetworkImageProvider(
+                            state.charList[index].imageurl,
+                            cache: true,
+                        )
+                      ),
+                      title: Text(state.charList[index].name),
+                      subtitle: Text('${state.charList[index].description.substring(0,50)}...'),
+                    )
+                  ),
+                ],
+              );
+            }
+          );
+        }
+      )
+
+      /*body: TextButton(
         child:Text('press'),
         onPressed: (){
-          context.read<SelectBloc>().add(SelectBeginChat());
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatPage(botname: 'jieun')));
-        },
-      ),
-    );
+
+        },*/
+
+      );
   }
 }

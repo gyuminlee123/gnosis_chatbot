@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'dart:convert';
 import 'package:gnosis_chatbot/repository/chatRepository.dart';
 import 'package:gnosis_chatbot/model/message.dart';
+import 'package:gnosis_chatbot/model/character.dart';
 
 part 'chat_state.dart';
 
@@ -10,9 +11,9 @@ part 'chat_event.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc({
-    required ChatRepository chatRepository,
+    required ChatRepository chatRepository,required Character character
   })  : _chatRepository = chatRepository,
-        super(ChatState()) {
+        super(ChatState(character: character)) {
     on<ChatInit>(_onChatInit);
     on<ChatSendMsg>(_onChatSendMsg);
     on<ChatDeleteAll>(_onChatDeleteAll);
@@ -28,7 +29,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       status: ChatStatus.init,
       username: _chatRepository.loadUsername(),
       email: _chatRepository.loadEmail(),
-      botname: event.botname,
       messageList: newMsgList,
     ));
 
@@ -47,7 +47,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }*/
 
     //Local 에서 이전 대화목록을 불러온다.
-    String msgListString = await _chatRepository.getPrevMsgFromLocal(state.botname, state.email);
+    String msgListString = await _chatRepository.getPrevMsgFromLocal(state.character.character_id, state.email);
 
     if(msgListString.isNotEmpty) {
       var jsonResult = jsonDecode(msgListString);
@@ -61,7 +61,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       status: ChatStatus.ready,
       username: _chatRepository.loadUsername(),
       email: _chatRepository.loadEmail(),
-      botname: event.botname,
       messageList: newMsgList,
     ));
   }
@@ -71,17 +70,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(
       status: ChatStatus.fetching,
     ));
-    var answer = await _chatRepository.sendMsgToServer(state.username, state.email, state.botname, event.message);
+    var answer = await _chatRepository.sendMsgToServer(state.username, state.email, state.character.character_id, event.message);
     var newMessage = Message(
         isUser: false,
-        name: state.botname,
+        name: state.character.name,
         email: '',
         message: answer['response'],
         messageID: answer['dialog_id']);
     state.messageList.insert(0,newMessage);
     //주고받은 메세지를 로컬에도 저장해야한다.
     var msgListString = jsonEncode(state.messageList).toString();
-    _chatRepository.saveMsgListToLocal(state.botname, state.email, msgListString);
+    _chatRepository.saveMsgListToLocal(state.character.character_id, state.email, msgListString);
 
     //print('msgListString : ${msgListString}');
 
@@ -106,7 +105,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
     //평가한 것을 로컬에도 저장해야한다.
     var msgListString = jsonEncode(state.messageList).toString();
-    _chatRepository.saveMsgListToLocal(state.botname, state.email, msgListString);
+    _chatRepository.saveMsgListToLocal(state.character.character_id, state.email, msgListString);
 
     emit(state.copyWith(
       status: ChatStatus.ready,
@@ -119,11 +118,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       status: ChatStatus.deleteall,
     ));
 
-    bool isSuccess = await _chatRepository.requestDelete(state.email, state.botname);
+    bool isSuccess = await _chatRepository.requestDelete(state.email, state.character.character_id);
     if( isSuccess ) {
       state.messageList.clear();
       //로컬저장소에서도 지운다.
-      _chatRepository.deleteMsgListInLocal(state.botname, state.email);
+      _chatRepository.deleteMsgListInLocal(state.character.character_id, state.email);
     }
     else {
       print('Fail to delete messages on server.');

@@ -3,6 +3,7 @@ import 'package:gnosis_chatbot/constants.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
+import 'package:extended_image/extended_image.dart';
 
 //flutter_chat_bubble 2.0.0 을 활용한 Bubble widget
 class ChatBubbles extends StatelessWidget {
@@ -31,14 +32,23 @@ class ChatBubbles extends StatelessWidget {
     return
       Row(
         mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if(!isMe)
+            CircleAvatar(
+                radius: 25,
+                backgroundImage: ExtendedNetworkImageProvider(
+                  'https://dimg.donga.com/wps/NEWS/IMAGE/2021/12/24/110942647.2.jpg',
+                  cache: true,
+              ),
+            ),
           if(isMe)
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
               child: ChatBubble(
                 clipper: ChatBubbleClipper8(type: BubbleType.sendBubble),
                 alignment: Alignment.topRight,
-                margin: const EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 10),
                 backGroundColor: Colors.blue,
                 child: Container(
                   constraints: BoxConstraints(
@@ -65,11 +75,11 @@ class ChatBubbles extends StatelessWidget {
             ),
           if(!isMe)
             Padding(
-              padding: const EdgeInsets.fromLTRB(15,0,0,0),
+              padding: const EdgeInsets.fromLTRB(0,20,0,0),
               child: ChatBubble(
                 clipper: ChatBubbleClipper8(type: BubbleType.receiverBubble),
                 backGroundColor: Colors.white70,
-                margin: const EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 0),
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.7,

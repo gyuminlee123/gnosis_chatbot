@@ -5,20 +5,21 @@ import 'package:gnosis_chatbot/chat/bloc/chat_bloc.dart';
 import 'package:gnosis_chatbot/chat/view/new_message.dart';
 import 'package:gnosis_chatbot/chat/widget/chat_bubble.dart';
 import 'package:gnosis_chatbot/model/message.dart';
+import 'package:gnosis_chatbot/model/character.dart';
 import 'package:gnosis_chatbot/constants.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({Key? key, required this.botname}) : super(key: key);
+  const ChatPage({Key? key, required this.character}) : super(key: key);
 
   //character 이름을 character 선택화면에서 넘겨 받는다.
-  final String botname;
+  final Character character;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      ChatBloc(chatRepository: context.read<ChatRepository>())
-        ..add(ChatInit(botname: botname)),
+      ChatBloc(chatRepository: context.read<ChatRepository>(), character: character)
+        ..add(ChatInit()),
       child: const ChatView(),
     );
   }
@@ -97,10 +98,13 @@ class _ChatViewState extends State<ChatView> {
                         itemCount: state.messageList.length,
                         itemBuilder: (context, index) {
                           return InkWell(
-                            onTap: () {
+                            onLongPress: () {
+                              //사용자 메세지를 클릭하면 무시한다.
+                              if(state.messageList[index].isUser) {
+                                return;
+                              }
                               showDialog(context: context,
                                 builder: (BuildContext context) {
-
                                     return AlertDialog(
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20) ),
@@ -190,11 +194,11 @@ class _ChatViewState extends State<ChatView> {
                           var newMessage = Message(isUser: true,
                               name: state.username,
                               email: state.email,
-                              message: message);
+                              message: message.trim());
                           state.messageList.insert(0, newMessage);
                           setState(() {});
                           context.read<ChatBloc>().add(
-                              ChatSendMsg(message: message)
+                              ChatSendMsg(message: message.trim())
                           );
                         }),
                   ]

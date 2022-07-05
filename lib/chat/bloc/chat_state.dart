@@ -15,32 +15,32 @@ class ChatState extends Equatable {
     this.status = ChatStatus.init,
     this.username = '',
     this.email = '',
-    this.botname = '',
+    required this.character,
     this.messageList = const <Message> [],
   }) {}
 
   final ChatStatus status;
   final String username;
   final String email;
-  final String botname;
+  final Character character;
   List<Message> messageList;
 
   ChatState copyWith({
     ChatStatus? status,
     String? username,
     String? email,
-    String? botname,
+    Character? character,
     List<Message>? messageList,
   }) {
     return ChatState(
       status: status ?? this.status,
       username: username ?? this.username,
       email: email ?? this.email,
-      botname: botname ?? this.botname,
+      character: character ?? this.character,
       messageList: messageList ?? this.messageList,
     );
   }
 
   @override
-  List<Object> get props => [status,username,email,botname,messageList];
+  List<Object> get props => [status,username,email,character,messageList];
 }
