@@ -7,7 +7,7 @@ import 'package:extended_image/extended_image.dart';
 
 //flutter_chat_bubble 2.0.0 을 활용한 Bubble widget
 class ChatBubbles extends StatelessWidget {
-  const ChatBubbles(this.message, this.isMe, this.userName, this.isSensible, this.isSpecific, this.isInteresting, this.isDangerous, {Key? key})
+  const ChatBubbles(this.message, this.isMe, this.userName, this.isSensible, this.isSpecific, this.isInteresting, this.isDangerous, this.imageUrl, {Key? key})
       : super(key: key);
 
   final String message;
@@ -17,6 +17,7 @@ class ChatBubbles extends StatelessWidget {
   final bool isSpecific;
   final bool isInteresting;
   final bool isDangerous;
+  final String imageUrl;
 
   String _assessString() {
     String assessStr = '';
@@ -38,7 +39,7 @@ class ChatBubbles extends StatelessWidget {
             CircleAvatar(
                 radius: 25,
                 backgroundImage: ExtendedNetworkImageProvider(
-                  'https://dimg.donga.com/wps/NEWS/IMAGE/2021/12/24/110942647.2.jpg',
+                  imageUrl,
                   cache: true,
               ),
             ),

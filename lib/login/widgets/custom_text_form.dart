@@ -9,11 +9,14 @@ class CustomTextFormField extends StatelessWidget {
       required this.text,
       required this.type,
       required this.controller,
+      required this.onTap,
       })
       : super(key: key);
   final String text;
   final inputStatus type;
   final TextEditingController? controller;
+
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
         Text(text),
         const SizedBox(height: 5.0),
         TextFormField(
+          onTap: onTap,
           controller: controller,
           validator: (value) {
             print('$text validation check');
@@ -49,21 +53,22 @@ class CustomTextFormField extends StatelessWidget {
             hintText: "Enter $text",
             enabledBorder: OutlineInputBorder(
               // 3. 기본 TextFormField 디자인
+              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
               borderRadius: BorderRadius.circular(20),
             ),
             focusedBorder: OutlineInputBorder(
               // 4. 손가락 터치시 TextFormField 디자인
-              borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+              borderSide: const BorderSide(color: Colors.grey, width: 2.0),
               borderRadius: BorderRadius.circular(20),
             ),
             errorBorder: OutlineInputBorder(
               // 5. 에러발생시 TextFormField 디자인
-              borderSide: const BorderSide(color: Colors.redAccent, width: 2.0),
+              borderSide: const BorderSide(color: Colors.grey, width: 1.0),
               borderRadius: BorderRadius.circular(20),
             ),
             focusedErrorBorder: OutlineInputBorder(
               // 5. 에러가 발생 후 손가락을 터치했을 때 TextFormField 디자인
-              borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+              borderSide: const BorderSide(color: Colors.grey, width: 2.0),
               borderRadius: BorderRadius.circular(20),
             ),
           ),

@@ -98,8 +98,12 @@ class _ChatViewState extends State<ChatView> {
                         itemCount: state.messageList.length,
                         itemBuilder: (context, index) {
                           return InkWell(
+                            //대화창을 클릭하면 키보드는 사라져야한다.
+                            onTap: (){
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
+                            //사용자 메세지를 클릭하면 무시한다.
                             onLongPress: () {
-                              //사용자 메세지를 클릭하면 무시한다.
                               if(state.messageList[index].isUser) {
                                 return;
                               }
@@ -181,7 +185,8 @@ class _ChatViewState extends State<ChatView> {
                                 state.messageList[index].isSensible,
                                 state.messageList[index].isSpecific,
                                 state.messageList[index].isInteresting,
-                                state.messageList[index].isDangerous,),
+                                state.messageList[index].isDangerous,
+                                state.character.imageurl),
                           );
                         },
                       ),
