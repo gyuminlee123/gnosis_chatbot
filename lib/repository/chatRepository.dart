@@ -95,6 +95,41 @@ class ChatRepository {
     await _plugin.remove(keyString);
   }
 
+  //파파고 API 로 부터 번역된 결과를 가지고 온다.
+  Future<String> getTranslatedMsg(String message) async {
+    String translatedMsg = '';
+    String _client_id = "g9JH0BHfZdA31PZdMp09";
+    String _client_secret = "GNFKCGCQTw";
+    //String _client_id = "dpptjkzef2";
+    //String _client_secret = "gkzNy4cOpVudDj8DNHfkF2a86aRye6aXSI5dZEjX";
+    String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
+    String _url = "https://openapi.naver.com/v1/papago/n2mt";
+
+    http.Response trans = await http.post(
+      Uri.parse(_url),
+      headers: {
+        'Content-Type': _content_type,
+        'X-Naver-Client-Id': _client_id,
+        'X-Naver-Client-Secret': _client_secret
+      },
+      body: {
+        'source': "ko",//위에서 언어 판별 함수에서 사용한 language 변수
+        'target': "ja",//원하는 언어를 선택할 수 있다.
+        'text': message,
+      },
+    );
+    if (trans.statusCode == 200) {
+      var dataJson = jsonDecode(trans.body);
+      var result_papago = dataJson['message']['result']['translatedText'];
+      print(result_papago);
+      translatedMsg = result_papago;
+    } else {
+      print(trans.statusCode);
+      print(trans.body);
+    }
+    return translatedMsg;
+  }
+
 
   //Server로 메세지를 보내고 응답을 받아온다.
   Future<dynamic> sendMsgToServer(username, email, botname, message) async {

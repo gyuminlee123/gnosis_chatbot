@@ -7,6 +7,7 @@ import 'package:gnosis_chatbot/chat/widget/chat_bubble.dart';
 import 'package:gnosis_chatbot/model/message.dart';
 import 'package:gnosis_chatbot/model/character.dart';
 import 'package:gnosis_chatbot/constants.dart';
+import 'dart:async';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({Key? key, required this.character}) : super(key: key);
@@ -34,6 +35,9 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
 
+  //한국어<->일어 전환버튼의 상태를 표시해준다.
+  bool isKorean = true;
+
   //채팅창을 지워준다. AlertDialog안에서는 context를 읽지 못해 실행이 안된다.
   void _deleteChatRoom() {
     context.read<ChatBloc>().add(ChatDeleteAll());
@@ -44,12 +48,36 @@ class _ChatViewState extends State<ChatView> {
     context.read<ChatBloc>().add(ChatSendAssess(index: index));
   }
 
+  //한국어->일어 번역해주는 함수
+  Future<String> _translateMsg(String message, bool isTranslate) async {
+    String translatedMsg = message;
+    if(isTranslate && message.isNotEmpty) {
+      translatedMsg = await context.read<ChatRepository>().getTranslatedMsg(message);
+      if(translatedMsg.isEmpty) translatedMsg = message;
+    }
+    return translatedMsg;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: const Text('CHAT WITH AI BOT'),
         actions: [
+          IconButton(
+              onPressed: () {
+                isKorean = isKorean ? false : true;
+                setState(() {});
+              },
+              icon: Image.asset(isKorean ? 'assets/korean.png' : 'assets/japanese.png',width: 25, height: 25),
+          ),
           //대화 목록 초기화여부를 AlertDialog를 띄워서 물어본다.
           IconButton(
             onPressed: (){
@@ -77,7 +105,7 @@ class _ChatViewState extends State<ChatView> {
                 }
               );
             },
-            icon: const Icon(Icons.delete))
+            icon: const Icon(Icons.delete)),
         ]
       ),
       body: BlocListener<ChatBloc, ChatState>(
@@ -94,6 +122,7 @@ class _ChatViewState extends State<ChatView> {
                   children: [
                     Expanded(
                       child: ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(10,10,0,10),
                         reverse: true,
                         itemCount: state.messageList.length,
                         itemBuilder: (context, index) {
@@ -178,15 +207,36 @@ class _ChatViewState extends State<ChatView> {
                                 },
                               );
                             },
-                            child: ChatBubbles(
-                                state.messageList[index].message,
-                                state.messageList[index].isUser,
-                                state.messageList[index].name,
-                                state.messageList[index].isSensible,
-                                state.messageList[index].isSpecific,
-                                state.messageList[index].isInteresting,
-                                state.messageList[index].isDangerous,
-                                state.character.imageurl),
+                            child:
+                            //파파고에서 일어 번역을 사용하는 경우 결과가 올때까지 대기 했다가
+                            //표시해줘야한다. FutureBuilder를 사용한다.
+                            FutureBuilder<String>(
+                              future: _translateMsg(state.messageList[index].message, !isKorean),
+                              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                if(snapshot.hasData) {
+                                  return ChatBubbles(
+                                  snapshot.data ?? 'error',
+                                  state.messageList[index].isUser,
+                                  state.messageList[index].name,
+                                  state.messageList[index].isSensible,
+                                  state.messageList[index].isSpecific,
+                                  state.messageList[index].isInteresting,
+                                  state.messageList[index].isDangerous,
+                                  state.character.imageurl);
+                                }
+                                else {
+                                  return ChatBubbles(
+                                      'Translating...',
+                                      state.messageList[index].isUser,
+                                      state.messageList[index].name,
+                                      state.messageList[index].isSensible,
+                                      state.messageList[index].isSpecific,
+                                      state.messageList[index].isInteresting,
+                                      state.messageList[index].isDangerous,
+                                      state.character.imageurl);
+                                }
+                            }
+                            )
                           );
                         },
                       ),

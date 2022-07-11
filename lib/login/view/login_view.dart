@@ -63,13 +63,14 @@ class _LoginViewState extends State<LoginView> {
         controller: _scrollController,
         child: Column(
           children: [
-            SizedBox(height: 60),
+            SizedBox(height: 100),
             //로그인 화면 로고
-            SvgPicture.asset(
-              'assets/chatbot.svg',
-              height: 200,
-              width: 200,
+            Image.asset(
+              'assets/coconem.png',
+              height: 150,
+              width: 150,
             ),
+            SizedBox(height: 20),
             const Text(
               'Gnosis Prototype Bot',
               style: TextStyle(
@@ -78,7 +79,7 @@ class _LoginViewState extends State<LoginView> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             //username 입력
             Form(
               key: _formKey,

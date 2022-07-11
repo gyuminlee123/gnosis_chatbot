@@ -21,7 +21,6 @@ class SelectBloc extends Bloc<SelectEvent, SelectState> {
 
   Future<void> _onSelectInit(SelectInit event, Emitter<SelectState> emit) async {
     emit(state.copyWith(status : SelectStatus.init));
-    print('onSelectInit');
     List<Character> newCharList = <Character> [];
     List charList = await _chatRepository.getCharList();
 
@@ -29,12 +28,10 @@ class SelectBloc extends Bloc<SelectEvent, SelectState> {
       Character newCharacter = Character.fromJson(character);
       newCharList.add(newCharacter);
     }
-    print(newCharList);
     emit(state.copyWith(status : SelectStatus.ready, charList: newCharList));
   }
 
   Future<void> _onSelectBeginChat(SelectBeginChat event, Emitter<SelectState> emit) async {
-    print('beginchat');
     emit(state.copyWith(status : SelectStatus.selected));
   }
 
