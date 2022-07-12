@@ -7,6 +7,7 @@ import 'package:gnosis_chatbot/chat/widget/chat_bubble.dart';
 import 'package:gnosis_chatbot/model/message.dart';
 import 'package:gnosis_chatbot/model/character.dart';
 import 'package:gnosis_chatbot/constants.dart';
+import 'package:translator/translator.dart';
 import 'dart:async';
 
 class ChatPage extends StatelessWidget {
@@ -56,6 +57,16 @@ class _ChatViewState extends State<ChatView> {
       if(translatedMsg.isEmpty) translatedMsg = message;
     }
     return translatedMsg;
+  }
+
+  //사용언어 체크
+  Future<String> _detectLangs(String text) async {
+    String langCode = 'ko';
+    if (text.length >= 2) {
+      langCode = await context.read<ChatRepository>().detectLangs(text);
+    }
+    print("LANGCODE!! $langCode");
+    return langCode;
   }
 
 
@@ -244,7 +255,10 @@ class _ChatViewState extends State<ChatView> {
                     NewMessage(
                         //status가 ready 상태가 아니면 입력을 받을 수 없다.
                         isReady: (state.status == ChatStatus.ready),
-                        onSend: (message) {
+                        onSend: (message) async{
+                          //어떤 언어로 쓰여졌는지 판별한다.
+                          _detectLangs(message.trim());
+                          //일본어면 한국어로 번역해서 전달한다.
                           //message send button 눌렸을때 일처리를 여기서 한다.
                           var newMessage = Message(isUser: true,
                               name: state.username,

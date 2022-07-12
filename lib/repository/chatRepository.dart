@@ -95,22 +95,53 @@ class ChatRepository {
     await _plugin.remove(keyString);
   }
 
-  //파파고 API 로 부터 번역된 결과를 가지고 온다.
-  Future<String> getTranslatedMsg(String message) async {
-    String translatedMsg = '';
-    String _client_id = "g9JH0BHfZdA31PZdMp09";
-    String _client_secret = "GNFKCGCQTw";
+  //파파고 API 로 언어의 종류를 캐치한다.
+  Future<String> detectLangs(String query) async {
+    String langCode = 'ko';
+    String _client_id = "dpptjkzef2";
+    String _client_secret = "EY74ZYbGljHqcFBaLPZLvy2diVuX8ezcJayCQcNY";
     //String _client_id = "dpptjkzef2";
     //String _client_secret = "gkzNy4cOpVudDj8DNHfkF2a86aRye6aXSI5dZEjX";
     String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
-    String _url = "https://openapi.naver.com/v1/papago/n2mt";
+    String _url = "https://naveropenapi.apigw.ntruss.com/langs/v1/dect";
 
     http.Response trans = await http.post(
       Uri.parse(_url),
       headers: {
         'Content-Type': _content_type,
-        'X-Naver-Client-Id': _client_id,
-        'X-Naver-Client-Secret': _client_secret
+        'X-NCP-APIGW-API-KEY-ID': _client_id,
+        'X-NCP-APIGW-API-KEY': _client_secret
+      },
+      body: {
+        'query': query,
+      },
+    );
+    if (trans.statusCode == 200) {
+      var dataJson = jsonDecode(trans.body);
+      langCode = dataJson['langCode'];
+    } else {
+      print(trans.statusCode);
+      print(trans.body);
+    }
+    return langCode;
+  }
+
+  //파파고 API 로 부터 번역된 결과를 가지고 온다.
+  Future<String> getTranslatedMsg(String message) async {
+    String translatedMsg = '';
+    //String _client_id = "g9JH0BHfZdA31PZdMp09";
+    //String _client_secret = "GNFKCGCQTw";
+    String _client_id = "dpptjkzef2";
+    String _client_secret = "EY74ZYbGljHqcFBaLPZLvy2diVuX8ezcJayCQcNY";
+    String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
+    String _url = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation";
+
+    http.Response trans = await http.post(
+      Uri.parse(_url),
+      headers: {
+        'Content-Type': _content_type,
+        'X-NCP-APIGW-API-KEY-ID': _client_id,
+        'X-NCP-APIGW-API-KEY': _client_secret
       },
       body: {
         'source': "ko",//위에서 언어 판별 함수에서 사용한 language 변수
