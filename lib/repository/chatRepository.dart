@@ -100,8 +100,6 @@ class ChatRepository {
     String langCode = 'ko';
     String _client_id = "dpptjkzef2";
     String _client_secret = "EY74ZYbGljHqcFBaLPZLvy2diVuX8ezcJayCQcNY";
-    //String _client_id = "dpptjkzef2";
-    //String _client_secret = "gkzNy4cOpVudDj8DNHfkF2a86aRye6aXSI5dZEjX";
     String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
     String _url = "https://naveropenapi.apigw.ntruss.com/langs/v1/dect";
 
@@ -127,10 +125,8 @@ class ChatRepository {
   }
 
   //파파고 API 로 부터 번역된 결과를 가지고 온다.
-  Future<String> getTranslatedMsg(String message) async {
+  Future<String> getTranslatedMsg(String message, String source, String target) async {
     String translatedMsg = '';
-    //String _client_id = "g9JH0BHfZdA31PZdMp09";
-    //String _client_secret = "GNFKCGCQTw";
     String _client_id = "dpptjkzef2";
     String _client_secret = "EY74ZYbGljHqcFBaLPZLvy2diVuX8ezcJayCQcNY";
     String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
@@ -144,15 +140,15 @@ class ChatRepository {
         'X-NCP-APIGW-API-KEY': _client_secret
       },
       body: {
-        'source': "ko",//위에서 언어 판별 함수에서 사용한 language 변수
-        'target': "ja",//원하는 언어를 선택할 수 있다.
+        'source': source,//번역전 메세지의 언어 종류
+        'target': target,//번역된 메세지의 언어 종류
         'text': message,
       },
     );
     if (trans.statusCode == 200) {
       var dataJson = jsonDecode(trans.body);
       var result_papago = dataJson['message']['result']['translatedText'];
-      print(result_papago);
+      //print(result_papago);
       translatedMsg = result_papago;
     } else {
       print(trans.statusCode);
@@ -230,7 +226,7 @@ class ChatRepository {
     //서버에서 response를 받으면 decode 해서 결과를 저장한다.
     if (response.statusCode == 200) {
       json_result = jsonDecode(response.body);
-      print(json_result);
+      //print(json_result);
     } else {
       print(url);
       print('Request failed with status: ${response.statusCode}.');
@@ -269,7 +265,7 @@ class ChatRepository {
 
     //서버에서 response를 받으면 decode 해서 결과를 저장한다.
     if (response.statusCode == 200) {
-      print(response.statusCode);
+      //print(response.statusCode);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

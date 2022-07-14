@@ -4,6 +4,7 @@ import 'package:gnosis_chatbot/repository/chatRepository.dart';
 import 'package:gnosis_chatbot/selectbot/bloc/select_bloc.dart';
 import 'package:gnosis_chatbot/chat/view/chat_view.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:gnosis_chatbot/constants.dart';
 
 
 class SelectPage extends StatelessWidget {
@@ -35,7 +36,7 @@ class _SelectViewState extends State<SelectView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Choose Character')),
+      appBar: AppBar(title: const Text('Choose Character'), backgroundColor: Pallet.defaultColor),
       body: BlocBuilder<SelectBloc, SelectState> (
         builder: (context, state) {
           return ListView.builder(

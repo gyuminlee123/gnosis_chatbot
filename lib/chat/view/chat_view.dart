@@ -7,7 +7,6 @@ import 'package:gnosis_chatbot/chat/widget/chat_bubble.dart';
 import 'package:gnosis_chatbot/model/message.dart';
 import 'package:gnosis_chatbot/model/character.dart';
 import 'package:gnosis_chatbot/constants.dart';
-import 'package:translator/translator.dart';
 import 'dart:async';
 
 class ChatPage extends StatelessWidget {
@@ -21,7 +20,7 @@ class ChatPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
       ChatBloc(chatRepository: context.read<ChatRepository>(), character: character)
-        ..add(ChatInit()),
+        ..add(const ChatInit()),
       child: const ChatView(),
     );
   }
@@ -41,7 +40,7 @@ class _ChatViewState extends State<ChatView> {
 
   //채팅창을 지워준다. AlertDialog안에서는 context를 읽지 못해 실행이 안된다.
   void _deleteChatRoom() {
-    context.read<ChatBloc>().add(ChatDeleteAll());
+    context.read<ChatBloc>().add(const ChatDeleteAll());
   }
 
   //평가내용을 서버로 전송한다.
@@ -53,7 +52,7 @@ class _ChatViewState extends State<ChatView> {
   Future<String> _translateMsg(String message, bool isTranslate) async {
     String translatedMsg = message;
     if(isTranslate && message.isNotEmpty) {
-      translatedMsg = await context.read<ChatRepository>().getTranslatedMsg(message);
+      translatedMsg = await context.read<ChatRepository>().getTranslatedMsg(message, 'ko', 'ja');
       if(translatedMsg.isEmpty) translatedMsg = message;
     }
     return translatedMsg;
@@ -65,7 +64,7 @@ class _ChatViewState extends State<ChatView> {
     if (text.length >= 2) {
       langCode = await context.read<ChatRepository>().detectLangs(text);
     }
-    print("LANGCODE!! $langCode");
+    //print("LANGCODE!! $langCode");
     return langCode;
   }
 
@@ -81,6 +80,7 @@ class _ChatViewState extends State<ChatView> {
       appBar: AppBar(
         elevation: 0,
         title: const Text('CHAT WITH AI BOT'),
+        backgroundColor: Pallet.defaultColor,
         actions: [
           IconButton(
               onPressed: () {
@@ -255,19 +255,25 @@ class _ChatViewState extends State<ChatView> {
                     NewMessage(
                         //status가 ready 상태가 아니면 입력을 받을 수 없다.
                         isReady: (state.status == ChatStatus.ready),
-                        onSend: (message) async{
+                        onSend: (message) async {
+                          message = message.trim();
                           //어떤 언어로 쓰여졌는지 판별한다.
-                          _detectLangs(message.trim());
                           //일본어면 한국어로 번역해서 전달한다.
+                          var langCode = await _detectLangs(message);
+                          if( langCode == 'ja' ) {
+                            message = await context.read<ChatRepository>().getTranslatedMsg(message, 'ja', 'ko');
+                            //print(message);
+                          }
+
                           //message send button 눌렸을때 일처리를 여기서 한다.
                           var newMessage = Message(isUser: true,
                               name: state.username,
                               email: state.email,
-                              message: message.trim());
+                              message: message);
                           state.messageList.insert(0, newMessage);
                           setState(() {});
                           context.read<ChatBloc>().add(
-                              ChatSendMsg(message: message.trim())
+                              ChatSendMsg(message: message)
                           );
                         }),
                   ]

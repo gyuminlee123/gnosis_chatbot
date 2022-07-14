@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gnosis_chatbot/repository/chatRepository.dart';
 import 'package:gnosis_chatbot/login/bloc/login_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gnosis_chatbot/login/widgets/custom_text_form.dart';
-import 'package:gnosis_chatbot/chat/view/chat_view.dart';
 import 'package:gnosis_chatbot/selectbot/view/select_view.dart';
+import 'package:gnosis_chatbot/constants.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -76,6 +75,7 @@ class _LoginViewState extends State<LoginView> {
               style: TextStyle(
                 fontSize: 27,
                 fontWeight: FontWeight.bold,
+                color: Colors.black54,
               ),
               textAlign: TextAlign.center,
             ),
@@ -116,7 +116,7 @@ class _LoginViewState extends State<LoginView> {
                       }
                     },
                     style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Pallet.defaultColor,
                         primary: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

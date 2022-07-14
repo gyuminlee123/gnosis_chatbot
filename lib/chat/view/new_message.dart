@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gnosis_chatbot/constants.dart';
 
 class NewMessage extends StatefulWidget {
   NewMessage({Key? key, required this.isReady, required this.onSend}) : super(key: key);
@@ -30,16 +31,19 @@ class _NewMessageState extends State<NewMessage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(top:8),
-        padding: EdgeInsets.all(8),
+        margin: const EdgeInsets.only(top:8),
+        padding: const EdgeInsets.all(8),
         child: Row(
           children: [
             Expanded(
               child: TextField(
                 maxLines: null,
                 controller: _controller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Send a message...',
+                  floatingLabelStyle: TextStyle(color: Pallet.defaultColor),
+                  focusedBorder: UnderlineInputBorder( borderSide: BorderSide(width:1, color: Pallet.defaultColor)),
+
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -61,7 +65,7 @@ class _NewMessageState extends State<NewMessage> {
                   }
               },
               icon: const Icon(Icons.send),
-              color: (_userEnterMessage.trim().isEmpty || !widget.isReady) ? Colors.grey : Colors.blueAccent,
+              color: (_userEnterMessage.trim().isEmpty || !widget.isReady) ? Colors.grey : Pallet.defaultColor,
             ),
           ],
         )

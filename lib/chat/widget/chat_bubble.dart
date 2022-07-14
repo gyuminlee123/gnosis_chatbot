@@ -4,6 +4,8 @@ import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:gnosis_chatbot/constants.dart';
+
 
 //flutter_chat_bubble 2.0.0 을 활용한 Bubble widget
 class ChatBubbles extends StatelessWidget {
@@ -50,7 +52,7 @@ class ChatBubbles extends StatelessWidget {
                 clipper: ChatBubbleClipper8(type: BubbleType.sendBubble),
                 alignment: Alignment.topRight,
                 margin: const EdgeInsets.only(top: 10),
-                backGroundColor: Colors.blue,
+                backGroundColor: Pallet.humanBubbleColor,
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery
@@ -79,7 +81,7 @@ class ChatBubbles extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(0,20,0,0),
               child: ChatBubble(
                 clipper: ChatBubbleClipper8(type: BubbleType.receiverBubble),
-                backGroundColor: Colors.white70,
+                backGroundColor: Pallet.aiBubbleColor,
                 margin: const EdgeInsets.only(top: 0),
                 child: Container(
                   constraints: BoxConstraints(
