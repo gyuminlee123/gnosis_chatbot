@@ -25,8 +25,8 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      //home: const TitlePage(),
-      home: const LoginPage(),
+      home: const TitlePage(),
+      //home: const LoginPage(),
     );
   }
 }

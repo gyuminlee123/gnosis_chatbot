@@ -14,13 +14,13 @@ class LoginPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           LoginBloc(chatRepository: context.read<ChatRepository>()),
-      child: LoginView(),
+      child: const LoginView(),
     );
   }
 }
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -57,19 +57,19 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
         scrollDirection: Axis.vertical,
         controller: _scrollController,
         child: Column(
           children: [
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
             //로그인 화면 로고
             Image.asset(
               'assets/coconem.png',
               height: 150,
               width: 150,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Text(
               'Gnosis Prototype Bot',
               style: TextStyle(
@@ -121,7 +121,7 @@ class _LoginViewState extends State<LoginView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        minimumSize: Size(400, 60)),
+                        minimumSize: const Size(400, 60)),
                     child: const Text(
                       "Enter",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
