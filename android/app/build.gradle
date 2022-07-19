@@ -59,46 +59,12 @@ android {
         versionName flutterVersionName
     }
 
- //   buildTypes {
- //       release {
- //           // TODO: Add your own signing config for the release build.
- //           // Signing with the debug keys for now, so `flutter run --release` works.
- //           signingConfig signingConfigs.debug
- //       }
- //   }
-
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // TODO: Add your own signing config for the release build.
+           // Signing with the debug keys for now, so `flutter run --release` works.
+           signingConfig signingConfigs.debug
         }
-    }
-
-    dependencies {
-
-        def appCenterSdkVersion = '4.1.0'
-
-        implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
-
-        implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
-
-        implementation "com.microsoft.appcenter:appcenter-distribute:${appCenterSdkVersion}"
-
-    }
-
-    defaultConfig {
-        applicationId "com.example.gnosis_chatbot"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 9
-        versionName "1.0.0"
     }
 
 }
