@@ -34,7 +34,7 @@ class _TitleViewState extends State<TitleView> with TickerProviderStateMixin {
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       vsync: this,
     );
     _animation = CurvedAnimation(
@@ -44,11 +44,15 @@ class _TitleViewState extends State<TitleView> with TickerProviderStateMixin {
 
     _controller.addListener(() {
       if(_controller.isCompleted) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
+        _goLoginPage();
       }
     });
 
     _controller.forward();
+  }
+
+  void _goLoginPage() {
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
   }
 
   @override
@@ -56,16 +60,21 @@ class _TitleViewState extends State<TitleView> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       appBar: null,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: FadeTransition(
-            opacity: _animation,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/coconemlogo.png"),
-              ],
+      body: GestureDetector(
+        onTap: () {
+          _goLoginPage();
+        },
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: FadeTransition(
+              opacity: _animation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/coconemlogo.png"),
+                ],
+              ),
             ),
           ),
         ),
