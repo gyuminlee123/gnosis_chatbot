@@ -11,6 +11,7 @@ class ChatRepository {
   final SharedPreferences _plugin;
   final String keyName = '_username_';
   final String keyEmail = '_email_';
+  Map<String,String> tlanslation_cache = {};
   String _username = '';
   String _email = '';
   //String _botname = '';
@@ -132,6 +133,13 @@ class ChatRepository {
     String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
     String _url = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation";
 
+    //만약 cache map 에 이미 번역한 적이 있으면 cache에 저장된 값을 리턴한다
+      if(tlanslation_cache.containsKey(message)) {
+        translatedMsg = tlanslation_cache[message].toString();
+        //print('In cache!! ${translatedMsg}');
+        return translatedMsg;
+      }
+
     http.Response trans = await http.post(
       Uri.parse(_url),
       headers: {
@@ -150,6 +158,8 @@ class ChatRepository {
       var result_papago = dataJson['message']['result']['translatedText'];
       //print(result_papago);
       translatedMsg = result_papago;
+      //번역에 성공하면 cache 에도 저장해준다.
+      tlanslation_cache[message] = translatedMsg;
     } else {
       print(trans.statusCode);
       print(trans.body);

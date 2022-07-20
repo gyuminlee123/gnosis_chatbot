@@ -60,25 +60,27 @@ class _TitleViewState extends State<TitleView> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       appBar: null,
-      body: GestureDetector(
+      body: InkWell(
         onTap: () {
           _goLoginPage();
         },
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: FadeTransition(
-              opacity: _animation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("assets/coconemlogo.png"),
-                ],
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: FadeTransition(
+                opacity: _animation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/coconemlogo.png"),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
     );
   }
 }
