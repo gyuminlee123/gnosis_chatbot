@@ -98,7 +98,7 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    signingConfigs {
+ /*   signingConfigs {
         release {
             storeFile rootProject.file("app/android.keystore")
             storePassword System.getenv("APPCENTER_KEYSTORE_PASSWORD")
@@ -110,7 +110,7 @@ android {
         release {
             signingConfig signingConfigs.release
         }
-    }
+    }*/
 }
 
 flutter {
