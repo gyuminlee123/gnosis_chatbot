@@ -32,7 +32,7 @@ class _NewMessageState extends State<NewMessage> {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top:8),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 25),
         child: Row(
           children: [
             Expanded(
